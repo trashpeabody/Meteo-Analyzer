@@ -1,0 +1,66 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Filtro Speci</title>
+		<script src="js/metar.js"></script>
+		<script src="js/detecto.js"></script>
+		<script src="js/jquery-3.2.0.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+	</head>
+	
+	<body id="cuerpo">
+	
+		<ul class="navbar">
+			<img alt="Brand" src="media/icons/aemet.png" id="logo"/>
+			<li><a href="index.html" class="derecha">Inicio</a></li>
+			<li><a href="speci.html" >Filtro</a></li>
+			<li><a href="about.html" class="active">Sobre el filtro</a></li>
+			<li><a href="contact.html">Contacto</a></li>
+		</ul>
+		<br><br><br><br>
+			<div id="titulo">
+				<h1 class="cabeza"> Sobre la utilización del filtro </h1>
+			</div>
+		<br><br>
+		<div id="content">
+		
+			<p class="explicacion"> En el caso de que solamente se quiera analizar un METAR o SPECI por separado, introducir en el primero de los cuadros y pulsar en el botón filtrar.
+									<br><br>
+									Cuando se quiera analizar un SPECI, incluyendo sus condiciones de emisión, es necesario introducir en el cuadro de la izquierda el METAR o SPECI anterior al cual hace referencia.
+									<br><br>
+									El botón de Limpiar código vacía ambos cuadros de texto y también el resultado de cualquier análisis previo.
+									<br><br>
+									Se puede analizar tantas veces seguidas como se desee, la aplicación solo emitirá la información sobre el mensaje en cuestión que se esté analizando sin necesidad de actualizar la página ni de borrar el contenido previo.
+			</p>
+			
+			<br><br><br><br>
+			
+			<h1 class="cabeza">Explicación de las 3 columnas del filtro</h1>
+			<br>
+			<br><br>
+			
+			<div id="correctos2">
+				<h1 class="titulo_explicacion">Términos analizados</h1>
+					<p class="explicacion2">En esta columna irán apareciendo los términos que el filtro ha podido analizar. <br><br>
+					Si encuentra algún error en el término, este será indicado junto a él.
+					<br><br>
+					Si el término es correcto, indicará el término diciendo que es correcto.
+					<br><br>
+					Al terminar con el análisis informará de que ha analizado tanto el METAR como el SPECI, y en el caso del segundo, indicará si cumple o no las condiciones de su emisión.</p>
+			</div>
+		
+			<div id="errores2">
+				<h1 class="titulo_explicacion">Errores importantes encontrados</h1>
+					<p class="explicacion2">En esta columna aparecerán mencionados errores de gran calado en el informe.<br><br> Estos errores serán del tipo de ausencia de algún término obligatorio, aparición de términos que no pueden estar juntos...</p>
+			</div>
+		
+			<div id="escapes2">
+				<h1 class="titulo_explicacion">Elementos evitados</h1>
+					<p class="explicacion2">En esta columna aparecerán mencionados aquellos términos que no han podido ser analizados.<br><br> Esto puede deberse a que dichos términos no tienen nada que ver con un mensaje meteorológicos tipo METAR o SPECI, o porque su posición es errónea y el filtro los detecta como que no pueden aparecer.</p>
+			</div>
+			
+			</div>
+		</div>
+	</body>
+
+</html>

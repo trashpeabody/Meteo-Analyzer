@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Filtro Speci</title>
+		<script src="js/metar.js"></script>
+		<script src="js/detecto.js"></script>
+		<script src="js/jquery-3.2.0.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+	</head>
+	
+	<body id="cuerpo">
+	
+	<ul class="navbar">
+		<img alt="Brand" src="media/icons/aemet.png" id="logo"/>
+		<li><a href="index.html" class="active derecha">Inicio</a></li>
+		<li><a href="speci.html" >Filtro</a></li>
+		<li><a href="about.html" >Sobre el filtro</a></li>
+		<li><a href="contact.html">Contacto</a></li>
+	</ul>
+	<br><br><br><br>
+	<div id="titulo">	
+		<h1 class="cabeza">Filtro de errores en METAR y SPECI</h1>
+	</div>
+		<br><br>	<br>		
+		<div id="content">
+		
+			<p class="explicacion">El filtro se ha desarrollado con el objetivo de analizar los errores tanto en METAR como en SPECI. Se puede analizar por separado cada uno de los 
+				dos tipos de mensaje, como analizar ambos y así comprobar que la emisión del SPECI era necesaria.
+				<br><br><br><br>
+				Este proyecto ha sido desarrollado por Jorge Sainz de la Maza Cabezalí, alumno de la Escuela Técnica Superior de Ingeniería Aeroespacial de laUniversidad Politécnica de Madrid, 
+				en colaboración con Miguel Ángel Pelacho Aja, Jefe de Servicio de Aplicaciones Aeronáuticas en AEMet.
+				
+			<br><br><br><br>Para información extra sobre la información mostrada por el filtro, entra en la pestaña Sobre el Filtro.</p>
+			
+		</div>
+		
+		<div>
+		<br><br><br>
+		</div>
+		
+		
+	
+	</body>
+	
+	<script>
+	
+	$(document).ready(function(){
+		
+		$("#limpiar").click(function(){
+			$("p").hide();
+			$("#input").val('');
+			$("#input2").val('');
+			});
+			
+		$("#decodificar").click(function(){
+			$("p").show();
+			});	
+		
+		$("#cambiar1, #cambiar2").click(function(){
+			$(".cambio").toggle();
+			});	
+		
+		$("#input").on("enterKey", function(e){
+			$("p").show();
+		});	
+		
+		$('#input').keyup(function(e){
+			if(e.keyCode == 13)
+			{
+				$(this).trigger("enterKey");
+			}
+		});
+		
+	});
+	</script>
+</html>
