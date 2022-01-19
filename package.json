@@ -1,0 +1,34 @@
+{
+  "name": "meteo_analyzer",
+  "version": "1.0.0",
+  "description": "App to analyze airport meteo messages",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trashpeabody/Meteo-Analyzer.git"
+  },
+  "keywords": [
+    "meteo",
+    "metar",
+    "speci",
+    "aeronautical",
+    "airport"
+  ],
+  "author": "Jorge Sainz de la Maza",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/trashpeabody/Meteo-Analyzer/issues"
+  },
+  "homepage": "https://github.com/trashpeabody/Meteo-Analyzer#readme",
+  "devDependencies": {
+    "standard": "16.0.4"
+  },
+  "eslintConfig": {
+    "extends": [
+      "./node_modules/standard/eslintrc.json"
+    ]
+  }
+}
