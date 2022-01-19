@@ -1,70 +1,123 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 	<head>
 		<meta charset="UTF-8">
-		<title>Filtro Speci</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Filtro de METAR y SPECI</title>
 		<script src="js/metar.js"></script>
 		<script src="js/detecto.js"></script>
+		<script src="js/speci.js"></script>
 		<script src="js/jquery-3.2.0.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 	
 	<body id="cuerpo">
 	
-	<ul class="navbar">
+	<ul class="navbar" id="MyTopnav">
 		<img alt="Brand" src="media/icons/aemet.png" id="logo"/>
-		<li><a href="index.html" class="active derecha">Inicio</a></li>
-		<li><a href="speci.html" >Filtro</a></li>
-		<li><a href="about.html" >Sobre el filtro</a></li>
-		<li><a href="contact.html">Contacto</a></li>
+		<li><a href="index.html" class="derecha">Inicio</a></li>
+		<li><a href="speci.html" class="active">Filtro</a></li>
+		<li><a href="about.html">Sobre el filtro</a></li>
+		<li><a href="contact.html" class="extremo">Contacto</a></li>
 	</ul>
-	<br><br><br><br>
+	<br></br><br></br>
 	<div id="titulo">	
-		<h1 class="cabeza">Filtro de errores en METAR y SPECI</h1>
+		<h1 class="cabeza">Filtro de mensajes</h1>
 	</div>
-		<br><br>	<br>		
+					
 		<div id="content">
 		
-			<p class="explicacion">El filtro se ha desarrollado con el objetivo de analizar los errores tanto en METAR como en SPECI. Se puede analizar por separado cada uno de los 
-				dos tipos de mensaje, como analizar ambos y así comprobar que la emisión del SPECI era necesaria.
-				<br><br><br><br>
-				Este proyecto ha sido desarrollado por Jorge Sainz de la Maza Cabezalí, alumno de la Escuela Técnica Superior de Ingeniería Aeroespacial de laUniversidad Politécnica de Madrid, 
-				en colaboración con Miguel Ángel Pelacho Aja, Jefe de Servicio de Aplicaciones Aeronáuticas en AEMet.
+			<div id="cuadros">
+				<br></br><br>
+						<textarea id="input" class="cuadros" placeholder="Introduzca el primer mensaje (METAR o SPECI)" cols="80" rows="10" onkeyup = "if(event.keyCode == 13) funcion_previa()"></textarea>			
 				
-			<br><br><br><br>Para información extra sobre la información mostrada por el filtro, entra en la pestaña Sobre el Filtro.</p>
+						<textarea id="input2" class="cuadros" placeholder="Introduzca el SPECI relativo al primer mensaje" cols="80" rows="10" onkeyup = "if(event.keyCode == 13) funcion_previa()"></textarea>		
+			</div>
+				
+				<div id="botones">
+						<button id="decodificar" class="buttons" onclick="funcion_previa()">Filtrar</button>
+						<button id='limpiar' class="buttons" onclick="limpiar()">Limpiar código</button>
+						<button id ="cambiar1" class="cambio" onclick="funcion_previa()">Ver análisis del Segundo Mensaje</button>
+						<button id ="cambiar2" class="cambio" style="display:none" onclick="funcion_previa()">Ver análisis del Primer Mensaje</button>
+				</div>
+			</div>
+			<br><br>
+			<div id="metar" class="cambio">
+			<h1 class ="cabeza2">Análisis del Primer Mensaje</h1>
+			<br>
+				<div id="correctos">
+					<h1 class="semititulo">Términos analizados</h1>
+						<p id="demo" class="cambio"></p><br><br>
+				</div>
+			
+				<div id="errores">
+					<h1 class="semititulo">Errores importantes encontrados</h1>
+						<p id="demo2" class="cambio"></p><br><br>
+				</div>
+			
+				<div id="escapes">
+					<h1 class="semititulo">Elementos evitados</h1>
+						<p id="demo3" class="cambio"><br><br>
+				</div>
+				
+			</div>
+			
+			<div id="metar" class="cambio" style="display:none">
+			<h1 class ="cabeza2">Análisis del Segundo Mensaje</h1>
+			<br>
+				<div id="correctos">
+					<h1 class="semititulo">Términos analizados</h1>
+						<p id="demo5" class="cambio" style="display:none"></p><br><br>
+				</div>
+			
+				<div id="errores">
+					<h1 class="semititulo">Errores importantes encontrados</h1>
+						<p id="demo6" class="cambio" style="display:none"></p><br><br>
+				</div>
+			
+				<div id="escapes">
+					<h1 class="semititulo">Elementos evitados</h1>
+						<p id="demo7" class="cambio" style="display:none"></p><br><br>
+				</div>
+			
+			</div>
 			
 		</div>
 		
-		<div>
-		<br><br><br>
-		</div>
 		
-		
-	
 	</body>
+	
+
 	
 	<script>
 	
 	$(document).ready(function(){
 		
 		$("#limpiar").click(function(){
-			$("p").hide();
 			$("#input").val('');
 			$("#input2").val('');
+			$("p").text('');
 			});
 			
-		$("#decodificar").click(function(){
+		/*$("#decodificar").click(function(){
 			$("p").show();
-			});	
+			});	*/
 		
 		$("#cambiar1, #cambiar2").click(function(){
 			$(".cambio").toggle();
+			funcion_previa();
 			});	
 		
-		$("#input").on("enterKey", function(e){
-			$("p").show();
-		});	
+		/*$("#decodificar").click(function(){
+			$(".aparecer").show();
+			});	*/
 		
-		$('#input').keyup(function(e){
+		/*$("#input, #input2").on("enterKey", function(e){
+			$("p").show();
+		});	*/
+		
+		$('#input, #input2').keyup(function(e){
 			if(e.keyCode == 13)
 			{
 				$(this).trigger("enterKey");
@@ -72,5 +125,14 @@
 		});
 		
 	});
+	
+	function myFunction() {
+		var x = document.getElementById("myTopnav");
+		if (x.className === "navbar") {
+			x.className += " responsive";
+		} else {
+			x.className = "navbar";
+		}
+}
 	</script>
 </html>
