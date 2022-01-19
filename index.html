@@ -4,7 +4,7 @@
 		<meta charset="UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Filtro de METAR y SPECI</title>
+		<title>METAR and SPECI filter</title>
 		<script src="js/metar.js"></script>
 		<script src="js/detecto.js"></script>
 		<script src="js/speci.js"></script>
@@ -15,7 +15,7 @@
 	<body>
 
 	<div id="titulo">	
-		<h1 class="cabeza">Filtro de mensajes</h1>
+		<h1 class="cabeza">Message Filter</h1>
 	</div>
 					
 		<div id="content">
@@ -28,48 +28,48 @@
 			</div>
 				
 				<div id="botones">
-						<button id="decodificar" class="buttons" onclick="funcion_previa()">Filtrar</button>
-						<button id='limpiar' class="buttons" onclick="limpiar()">Limpiar código</button>
-						<button id ="cambiar1" class="cambio" onclick="funcion_previa()">Ver análisis del Segundo Mensaje</button>
-						<button id ="cambiar2" class="cambio" style="display:none" onclick="funcion_previa()">Ver análisis del Primer Mensaje</button>
+						<button id="decodificar" class="buttons" onclick="funcion_previa()">Filter</button>
+						<button id='limpiar' class="buttons" onclick="limpiar()">Clean</button>
+						<button id ="cambiar1" class="cambio" onclick="funcion_previa()">See second message analysis</button>
+						<button id ="cambiar2" class="cambio" style="display:none" onclick="funcion_previa()">See first message analysis</button>
 				</div>
 			</div>
 			<br><br>
 			<div id="metar" class="cambio">
-			<h1 class ="cabeza2">Análisis del Primer Mensaje</h1>
+			<h1 class ="cabeza2">First Message Analysis</h1>
 			<br>
 				<div id="correctos">
-					<h1 class="semititulo">Términos analizados</h1>
+					<h1 class="semititulo">Elements Analysed</h1>
 						<p id="demo" class="cambio"></p><br><br>
 				</div>
 			
 				<div id="errores">
-					<h1 class="semititulo">Errores importantes encontrados</h1>
+					<h1 class="semititulo">Severe Errors</h1>
 						<p id="demo2" class="cambio"></p><br><br>
 				</div>
 			
 				<div id="escapes">
-					<h1 class="semititulo">Elementos evitados</h1>
+					<h1 class="semititulo">Avoided Elements</h1>
 						<p id="demo3" class="cambio"><br><br>
 				</div>
 				
 			</div>
 			
 			<div id="metar" class="cambio" style="display:none">
-			<h1 class ="cabeza2">Análisis del Segundo Mensaje</h1>
+			<h1 class ="cabeza2">Second Message Analysis</h1>
 			<br>
 				<div id="correctos">
-					<h1 class="semititulo">Términos analizados</h1>
+					<h1 class="semititulo">Elements Analysed</h1>
 						<p id="demo5" class="cambio" style="display:none"></p><br><br>
 				</div>
 			
 				<div id="errores">
-					<h1 class="semititulo">Errores importantes encontrados</h1>
+					<h1 class="semititulo">Severe Errors</h1>
 						<p id="demo6" class="cambio" style="display:none"></p><br><br>
 				</div>
 			
 				<div id="escapes">
-					<h1 class="semititulo">Elementos evitados</h1>
+					<h1 class="semititulo">Avoided Elements</h1>
 						<p id="demo7" class="cambio" style="display:none"></p><br><br>
 				</div>
 			
