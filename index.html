@@ -5,126 +5,25 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>METAR and SPECI filter</title>
-		<script src="js/metar.js"></script>
-		<script src="js/detecto.js"></script>
-		<script src="js/speci.js"></script>
-		<script src="js/jquery-3.2.0.min.js"></script>
+		<script src="js/main.js"></script>
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 	
 	<body>
 
-	<div id="titulo">	
-		<h1 class="cabeza">Message Filter</h1>
-	</div>
-					
-		<div id="content">
+		<h1>Message Filter</h1>
 		
-			<div id="cuadros">
-				<br></br><br>
-						<textarea id="input" class="cuadros" placeholder="Introduzca el primer mensaje (METAR o SPECI)" cols="80" rows="10" onkeyup = "if(event.keyCode == 13) funcion_previa()"></textarea>			
-				
-						<textarea id="input2" class="cuadros" placeholder="Introduzca el SPECI relativo al primer mensaje" cols="80" rows="10" onkeyup = "if(event.keyCode == 13) funcion_previa()"></textarea>		
+			<div>
+				<textarea id="input" class="cuadros" placeholder="Input message" cols="80" rows="10" onkeyup = "if(event.keyCode == 13) funcion_previa()"></textarea>			
 			</div>
 				
-				<div id="botones">
-						<button id="decodificar" class="buttons" onclick="funcion_previa()">Filter</button>
-						<button id='limpiar' class="buttons" onclick="limpiar()">Clean</button>
-						<button id ="cambiar1" class="cambio" onclick="funcion_previa()">See second message analysis</button>
-						<button id ="cambiar2" class="cambio" style="display:none" onclick="funcion_previa()">See first message analysis</button>
+				<div>
+					<button id="decodificar" class="buttons" onclick="funcion_previa()">Analyse</button>
 				</div>
-			</div>
-			<br><br>
-			<div id="metar" class="cambio">
-			<h1 class ="cabeza2">First Message Analysis</h1>
-			<br>
-				<div id="correctos">
-					<h1 class="semititulo">Elements Analysed</h1>
-						<p id="demo" class="cambio"></p><br><br>
-				</div>
-			
-				<div id="errores">
-					<h1 class="semititulo">Severe Errors</h1>
-						<p id="demo2" class="cambio"></p><br><br>
-				</div>
-			
-				<div id="escapes">
-					<h1 class="semititulo">Avoided Elements</h1>
-						<p id="demo3" class="cambio"><br><br>
-				</div>
-				
-			</div>
-			
-			<div id="metar" class="cambio" style="display:none">
-			<h1 class ="cabeza2">Second Message Analysis</h1>
-			<br>
-				<div id="correctos">
-					<h1 class="semititulo">Elements Analysed</h1>
-						<p id="demo5" class="cambio" style="display:none"></p><br><br>
-				</div>
-			
-				<div id="errores">
-					<h1 class="semititulo">Severe Errors</h1>
-						<p id="demo6" class="cambio" style="display:none"></p><br><br>
-				</div>
-			
-				<div id="escapes">
-					<h1 class="semititulo">Avoided Elements</h1>
-						<p id="demo7" class="cambio" style="display:none"></p><br><br>
-				</div>
-			
-			</div>
-			
-		</div>
-		
-		
-	</body>
-	
 
+	</body>
 	
 	<script>
 	
-	$(document).ready(function(){
-		
-		$("#limpiar").click(function(){
-			$("#input").val('');
-			$("#input2").val('');
-			$("p").text('');
-			});
-			
-		/*$("#decodificar").click(function(){
-			$("p").show();
-			});	*/
-		
-		$("#cambiar1, #cambiar2").click(function(){
-			$(".cambio").toggle();
-			funcion_previa();
-			});	
-		
-		/*$("#decodificar").click(function(){
-			$(".aparecer").show();
-			});	*/
-		
-		/*$("#input, #input2").on("enterKey", function(e){
-			$("p").show();
-		});	*/
-		
-		$('#input, #input2').keyup(function(e){
-			if(e.keyCode == 13)
-			{
-				$(this).trigger("enterKey");
-			}
-		});
-		
-	});
-	
-	function myFunction() {
-		var x = document.getElementById("myTopnav");
-		if (x.className === "navbar") {
-			x.className += " responsive";
-		} else {
-			x.className = "navbar";
-		}
-}
 	</script>
 </html>

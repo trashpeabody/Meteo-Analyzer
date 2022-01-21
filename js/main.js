@@ -30,7 +30,7 @@ const checkEmpty = () => {
   }
 }
 
-const funcion_previa = (message, kind = 'METAR') => {
+const analyse = (message, kind = 'METAR') => {
   messageArray = getArray(message)
   checkKind(kind)
 
@@ -76,3 +76,5 @@ const funcion_previa = (message, kind = 'METAR') => {
 
   checkMinVisibility()
 }
+
+export default analyse
