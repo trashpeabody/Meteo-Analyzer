@@ -3,6 +3,7 @@ const checkKind = (element, kind, result, error) => {
     error += 'Message must start with the keyword ' + kind
   } else {
     result += 'Key identifier of the message kind'
+    console.log(result)
   }
 }
 

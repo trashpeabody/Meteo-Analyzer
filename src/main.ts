@@ -3,6 +3,8 @@ import checkDate from './elements/date.js'
 import checkKind from './elements/kind.js'
 import checkWind from './elements/averageWind.js'
 
+const analyseButton = document.querySelector('.analyse')
+
 let error = ''
 const messageAnalyzed = [{}]
 let messageArray
@@ -30,9 +32,15 @@ const checkEmpty = () => {
   }
 }
 
-const analyse = (message, kind = 'METAR') => {
+const analyse = (kind = 'METAR') => {
+  const message = 'METAR LEMD 210900Z 34003KT 310V020 CAVOK M01/M03 Q1026 NOSIG='
+  const result = ''
+  const error = ''
+  console.log('called')
   messageArray = getArray(message)
-  checkKind(kind)
+  console.log(messageArray)
+  checkKind(messageArray[0], kind, result, error)
+  console.log(result)
 
   if (messageArray[0].toString() === 'COR') {
     messageAnalyzed.push({
@@ -67,14 +75,8 @@ const analyse = (message, kind = 'METAR') => {
       [messageArray[0]]: windExplanation
     })
   }
-
-  checkWindVar()
-
-  checkCavok()
-
-  checkVisibility()
-
-  checkMinVisibility()
 }
 
-export default analyse
+analyseButton.addEventListener('click', () => {
+  analyse()
+})
