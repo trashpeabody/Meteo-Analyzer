@@ -1,7 +1,7 @@
-import checkAirport from './elements/airport.js'
-import checkDate from './elements/date.js'
-import checkKind from './elements/kind.js'
-import checkWind from './elements/averageWind.js'
+import checkAirport from './modules/airport.js'
+import checkDate from './modules/date.js'
+import checkKind from './modules/kind.js'
+import checkWind from './modules/averageWind.js'
 
 const analyseButton = document.querySelector('.analyse')
 
