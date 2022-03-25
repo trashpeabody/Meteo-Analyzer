@@ -1,82 +1,102 @@
-import checkAirport from './modules/airport.js'
-import checkDate from './modules/date.js'
-import checkKind from './modules/kind.js'
-import checkWind from './modules/averageWind.js'
+import { checkAirport } from './modules/airport.js'
+// import checkDate from './modules/date.js'
+import { checkKind } from './modules/kind'
+// import checkWind from './modules/averageWind.js'
+import { Result } from './modules/interfaces'
+import { getArray } from './modules/format'
 
-const analyseButton = document.querySelector('.analyse')
+// const analyseButton = document.querySelector('.analyse')
 
-let error = ''
-const messageAnalyzed = [{}]
-let messageArray
-const airportInfo = {
-  icaoCode: 'ZZZZ',
-  hourly: true,
-  trend: false
+// let error = ''
+// const messageAnalyzed = [{}]
+// let messageArray
+// const airportInfo = {
+//   icaoCode: 'ZZZZ',
+//   hourly: true,
+//   trend: false
+// }
+
+// const checkEmpty = () => {
+//   if (messageArray.length === 0) {
+//     error += 'Message incomplete, please fill a complete message.'
+//     return true
+//   } else {
+//     return false
+//   }
+// }
+interface ItemResult {
+  term: string,
+  result: Result
 }
 
-const getArray = (message) => {
-  return message.toUpperCase()
-    .split(' ')
-    .map(element =>
-      element.replace(/\r?\n/g, ' ')
-        .trim())
-    .filter(element => element !== '')
-}
+type checkFunction = (term: string, info?: any) => Result
 
-const checkEmpty = () => {
-  if (messageArray.length === 0) {
-    error += 'Message incomplete, please fill a complete message.'
-    return true
-  } else {
-    return false
+class FinalResult {
+  items: ItemResult[] = []
+  addItem(term: string, result: Result): void {
+    const newItem = {
+      term: term,
+      result: result
+    }
+    this.items.push(newItem)
   }
-}
-
-const analyse = (kind = 'METAR') => {
-  const message = 'METAR LEMD 210900Z 34003KT 310V020 CAVOK M01/M03 Q1026 NOSIG='
-  const result = ''
-  const error = ''
-  console.log('called')
-  messageArray = getArray(message)
-  console.log(messageArray)
-  checkKind(messageArray[0], kind, result, error)
-  console.log(result)
-
-  if (messageArray[0].toString() === 'COR') {
-    messageAnalyzed.push({
-      [messageArray[0]]: 'This is a correction from a previously sent METAR or SPECI'
-    })
-    messageArray.shift()
+  get lastItem() {
+    return this.items[this.items.length - 1]
   }
-
-  checkAirport(messageArray[0])
-
-  checkDate(messageArray[0])
-
-  if (messageArray[0].toString() === 'AUTO') {
-    messageAnalyzed.push({
-      [messageArray[0]]: 'This is an automatically generated METAR or SPECI'
-    })
-    messageArray.shift()
+  private isLastCorrect(): boolean {
+    return this.lastItem.result.isCorrect
   }
-
-  if (messageArray[0].toString() === 'NIL=') {
-    messageAnalyzed.push({
-      [messageArray[0]]: 'Message has been lost or forecast has not been done'
-    })
-    return
-  }
-
-  const windExplanation = ''
-  let avgWindDirection, avgWindSpeed
-  checkWind(messageArray[0], avgWindDirection, avgWindSpeed, windExplanation, error)
-  if (windExplanation.length > 0) {
-    messageAnalyzed.push({
-      [messageArray[0]]: windExplanation
-    })
+  checkNewTerm(term: string, check: checkFunction, info?: any): boolean {
+    this.addItem(term, check(term, info))
+    return this.isLastCorrect()
   }
 }
 
-analyseButton.addEventListener('click', () => {
-  analyse()
-})
+const message: string = 'METAR LEMD 210900Z 34003KT 310V020 CAVOK M01/M03 Q1026 NOSIG='
+let finalResult = new FinalResult
+let index: number = 0
+
+export const analyse = (kind: 'METAR' | 'SPECI' = 'METAR'): FinalResult => {
+  // Split string message into array of terms
+  const messageArray: string[] = getArray(message)
+
+  if (!finalResult.checkNewTerm(messageArray[index], checkKind, kind)) return finalResult
+  index++
+
+  if (messageArray[index] === 'COR') {
+    finalResult.addItem(messageArray[index], { isCorrect: true, result: 'This is a correction from a previously sent METAR or SPECI' })
+    index++
+  }
+
+  if (!finalResult.checkNewTerm(messageArray[index], checkAirport)) return finalResult
+  index++
+
+  return finalResult
+
+
+  //   checkDate(messageArray[0])
+
+  //   if (messageArray[0].toString() === 'AUTO') {
+  //     messageAnalyzed.push({
+  //       [messageArray[0]]: 'This is an automatically generated METAR or SPECI'
+  //     })
+  //     messageArray.shift()
+  //   }
+
+  //   if (messageArray[0].toString() === 'NIL=') {
+  //     messageAnalyzed.push({
+  //       [messageArray[0]]: 'Message has been lost or forecast has not been done'
+  //     })
+  //     return
+  //   }
+
+  //   const windExplanation = ''
+  //   let avgWindDirection, avgWindSpeed
+  //   checkWind(messageArray[0], avgWindDirection, avgWindSpeed, windExplanation, error)
+  //   if (windExplanation.length > 0) {
+  //     messageAnalyzed.push({
+  //       [messageArray[0]]: windExplanation
+  //     })
+  //   }
+  // }
+}
