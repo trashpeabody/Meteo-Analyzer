@@ -5,7 +5,7 @@ const checkDay = (day: number) => {
 }
 
 const checkHour = (hour: number) => {
-  return (hour >= 0 && hour <= 24)
+  return (hour >= 0 && hour <= 23)
 }
 
 const checkMin = (min: number) => {
@@ -15,9 +15,15 @@ const checkMin = (min: number) => {
 export const checkDate = (date: string): Result => {
   const dateRegExp = /^[0-3][0-9][0-2][0-9][0-5][0-9][Z]$/
   if (dateRegExp.test(date)) {
-    if (checkDay(Number(date.slice(0, 2)))) {
-      if (checkHour(Number(date.slice(2, 2)))) {
-        if (checkMin(Number(date.slice(4, 2)))) {
+
+    const day = Number(date.slice(0, 2))
+    if (checkDay(day)) {
+
+      const hour = Number(date.slice(2, 4))
+      if (checkHour(hour)) {
+
+        const min = Number(date.slice(4, 6))
+        if (checkMin(min)) {
           return {
             result: 'Month day and Zulu time of the message.',
             isCorrect: true

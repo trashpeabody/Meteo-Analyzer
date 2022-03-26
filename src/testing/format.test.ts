@@ -4,23 +4,27 @@ const message: String = 'METAR LEMD 210900Z 34003KT 310V020 CAVOK M01/M03 Q1026 
 const messageArray: String[] = ['METAR', 'LEMD', '210900Z', '34003KT', '310V020', 'CAVOK', 'M01/M03', 'Q1026', 'NOSIG=']
 
 describe('Test conversor from string to array', () => {
-  test('Return array of items when called getArray', () => {
+
+  test('Correct lists of items', () => {
     const result: String[] = getArray(message)
     expect(result).toHaveLength(9)
     expect(result).toStrictEqual(messageArray)
   })
-  test('When message is empty, received empty array', () => {
+
+  test('Empty array', () => {
     const result: String[] = getArray('')
     expect(result).toHaveLength(0)
     expect(result).toStrictEqual([])
   })
-  test('When there are more than one blank between words, filter them', () => {
+
+  test('String with several blanks between terms', () => {
     const messageBlanks: String = 'METAR      LEMD 210900Z 34003KT     310V020 CAVOK M01/M03 Q1026 NOSIG='
     const result: String[] = getArray(messageBlanks)
     expect(result).toHaveLength(9)
     expect(result).toStrictEqual(messageArray)
   })
-  test('When message includes line feed, filter them', () => {
+
+  test('String with line feeds', () => {
     const messageLF: String = `METAR      LEMD 210900Z 34003KT     310V020 CAVOK M01/M03 Q1026 
       NOSIG=
     `

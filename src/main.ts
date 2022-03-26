@@ -1,5 +1,5 @@
 import { checkAirport } from './modules/airport.js'
-// import checkDate from './modules/date.js'
+import { checkDate } from './modules/date.js'
 import { checkKind } from './modules/kind'
 // import checkWind from './modules/averageWind.js'
 import { Result } from './modules/interfaces'
@@ -57,7 +57,6 @@ let finalResult = new FinalResult
 let index: number = 0
 
 export const analyse = (kind: 'METAR' | 'SPECI' = 'METAR'): FinalResult => {
-  // Split string message into array of terms
   const messageArray: string[] = getArray(message)
 
   if (!finalResult.checkNewTerm(messageArray[index], checkKind, kind)) return finalResult
@@ -71,24 +70,20 @@ export const analyse = (kind: 'METAR' | 'SPECI' = 'METAR'): FinalResult => {
   if (!finalResult.checkNewTerm(messageArray[index], checkAirport)) return finalResult
   index++
 
+  if (!finalResult.checkNewTerm(messageArray[index], checkDate)) return finalResult
+  index++
+
+  if (messageArray[index] === 'AUTO') {
+    finalResult.addItem(messageArray[index], { isCorrect: true, result: 'This is an automatically generated METAR or SPECI' })
+    index++
+  }
+
+  if (messageArray[index] === 'NIL') {
+    finalResult.addItem(messageArray[index], { isCorrect: true, result: 'Message has been lost or forecast has not been done' })
+    index++
+  }
+
   return finalResult
-
-
-  //   checkDate(messageArray[0])
-
-  //   if (messageArray[0].toString() === 'AUTO') {
-  //     messageAnalyzed.push({
-  //       [messageArray[0]]: 'This is an automatically generated METAR or SPECI'
-  //     })
-  //     messageArray.shift()
-  //   }
-
-  //   if (messageArray[0].toString() === 'NIL=') {
-  //     messageAnalyzed.push({
-  //       [messageArray[0]]: 'Message has been lost or forecast has not been done'
-  //     })
-  //     return
-  //   }
 
   //   const windExplanation = ''
   //   let avgWindDirection, avgWindSpeed
