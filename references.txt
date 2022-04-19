@@ -1,2 +1,6 @@
 https://www.icao.int/airnavigation/IMP/Documents/Annex%203%20-%2075.pdf
+from page 101
+
 https://www.aemet.es/documentos/es/conocermas/aeronautica/AU-GUI-0102.pdf
+
+
