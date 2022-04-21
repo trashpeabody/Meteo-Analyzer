@@ -6,6 +6,7 @@ import { MessageProcessed, FinalResult, Check, OptionalCheck } from './modules/t
 import { getArray } from './modules/format'
 import { checkWindVar } from './modules/variableWind'
 import { checkVisibility } from './modules/averageVisibility'
+import { checkMinVisibility } from './modules/minVisibility'
 
 export const analyse = (kind: 'METAR' | 'SPECI' = 'METAR'): FinalResult => {
   const message = 'METAR LEMD 210900Z 34003KT 310V020 CAVOK M01/M03 Q1026 NOSIG='
@@ -95,9 +96,15 @@ export const analyse = (kind: 'METAR' | 'SPECI' = 'METAR'): FinalResult => {
       })
     index++
   } else {
-    if (!finalResult.checkCompulsory(messageArray[index], checkVisibility, messageArray[index - 1]))
+    if (!finalResult.checkCompulsory(messageArray[index], checkVisibility))
       return finalResult
     index++
+
+    optionalCheck = finalResult.checkOptional(messageArray[index], checkMinVisibility, messageArray[index])
+    if (optionalCheck.matches) {
+      if (!optionalCheck.isCorrect) return finalResult
+      index++
+    }
 
   }
 

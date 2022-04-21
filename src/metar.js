@@ -1,111 +1,4 @@
-function rwy_visual_range (rvr_codigo, rvr_codigo_previo, rvr_n) {	// COMPRUEBA QUE NO SE REPITAN TÉRMINOS Y SUS CONDICIONES OACI
-  rvr_reg_exp = /^(R)(\d{2})(R|L|C)?(\/)(P|M)?(\d{4})(N|D|U)?(=)?$/	// VARIABLE DE RVR
-
-  if (rvr_codigo.charAt(rvr_codigo.length - 1) == '=') {
-    rvr_codigo = rvr_codigo.substr(0, rvr_codigo.length - 1)
-  }
-
-  if (rvr_reg_exp.test(rvr_codigo) == true) {
-    for (rvr_bucle = 0; rvr_bucle < rvr_codigo_previo.length; rvr_bucle++) {
-      rvr_previo_analizado = rvr_codigo_previo[rvr_bucle].toString()
-      rvr_dividido = rvr_codigo.split('/')										// DIVIDIMOS POR LA / EL CÓDIGO A ANALIZAR
-      rvr_previo_dividido = rvr_previo_analizado.split('/')				// DIVIDIMOS POR LA BARRA EL CÓDIGO ANTERIOR
-
-      rvr_0 = rvr_dividido[0].toString()										// DECLARAMOS VARIABLES
-      rvr_previo_0 = rvr_previo_dividido[0].toString()
-
-      rvr_1 = rvr_dividido[1].toString()
-      longitud_rvr = rvr_1.length
-
-      if (rvr_n == 4) {													// MÁXIMO DE 4 TÉRMINOS DE RVR
-        salida_texto("<span style='color:red; font-weight:bold'>Ya hay 4 términos de RVR, lo cual es el máximo. El término " + rvr_codigo + ' no puede ser de RVR.</span>')
-        return 0
-      } else if (rvr_n < 4 && rvr_0 != rvr_previo_0) {					// QUE NO SEAN RVR DE LA MISMA PISTA, NO SE PUEDEN REPETIR
-        rvr_comp = pistas(rvr_0.slice(1, 3))							// VERIFICAMOS QUE LO REFERENTE A LA PISTA SEA CORRECTO
-
-        if (rvr_comp === 0) {
-          return 0
-        } else if (rvr_comp == true) {
-          if (rvr_1.charAt(0) == 'P') {						// RVR MAYOR DE 2000 METROS
-            if (parseInt(rvr_1.slice(1, 5)) != 2000) {
-              salida_texto("<span style='color:red; font-weight:bold'>El RVR en " + rvr_codigo + ' ser de 2000 si comienza por la letra P.</span>')
-              return 0
-            }
-          } else if (rvr_1.charAt(0) == 'M') {					// RVR MENOR DE 0050 METROS
-            if (parseInt(rvr_1.slice(1, 5)) != 50) {
-              salida_texto("<span style='color:red; font-weight:bold'>El RVR en " + rvr_codigo + ' ser de 0050 si comienza por la letra M.</span>')
-              return 0
-            }
-          } else {												// RVR ENTRE 50 Y 2000 METROS
-            rvr_comp_2 = rvr_precision(rvr_1.slice(0, 4))				// COMPROBAMOS LA PRECISIÓN DE LAS MEDIDAS
-            rvr_posicion_analizar = longitud_rvr - 1
-
-            if (rvr_comp_2 === 0) {		// SI HAY ERRORES SALIMOS
-              return 0
-            } else if (rvr_comp_2 == true) {
-              if (isNaN(rvr_1.charAt(rvr_posicion_analizar)) == true) {		// RVR ACABADO EN UNA CIERTA TENDENCIA (SOLO U, N, D)
-                if (rvr_1.charAt(rvr_posicion_analizar) != 'U' && rvr_1.charAt(rvr_posicion_analizar) != 'N' && rvr_1.charAt(rvr_posicion_analizar) != 'D') {
-                  salida_texto("<span style='color:red; font-weight:bold'>El RVR en " + rvr_codigo + ' solo puede acabar en N, D o U para indicar su tendencia.</span>')
-                  return 0
-                }
-              }
-            }
-          }
-        }
-      } else if (rvr_n < 4 && rvr_0 == rvr_previo_0) {
-        salida_texto("<span style='color:red; font-weight:bold'>No puede haber dos términos de RVR para la misma pista: " + rvr_codigo + ' ' + rvr_codigo_previo[rvr_bucle] + '.</span>')
-        return 0
-      }
-    }
-
-    salida_texto('El término de RVR ' + rvr_codigo + ' es correcto.')
-    return true
-  } else {
-    return false
-  }
-}
-
-function pistas (numero_pista) {		// FUNCIÓN PARA COMPROBAR QUE LA PISTA ESTÁ ENTRE 01 Y 36
-  if (parseInt(numero_pista) == 0 || parseInt(numero_pista) > 36) {
-    salida_texto("<span style='color:red; font-weight:bold'>El número de pista en " + numero_pista + ' debe estar entre 01 y 36.</span>')
-    return 0
-  } else {
-    return true
-  }
-}
-
-function rvr_precision (rvr_dato) {		// FUNCIÓN PARA COMPROBAR LA PRECISIÓN DE LAS MEDIDAS Y QUE SE ENCUENTRE ENTRE EL MÁXIMO Y MÍNIMO
-  if (parseInt(rvr_dato) >= 50 && parseInt(rvr_dato) < 400) {
-    if (parseInt(rvr_dato.slice(2, 4)) != 0 && parseInt(rvr_dato.slice(2, 4)) != 25 && parseInt(rvr_dato.slice(2, 4)) != 50 && parseInt(rvr_dato.slice(2, 4)) != 75) {
-      salida_texto("<span style='color:red; font-weight:bold'>El RVR en " + rvr_dato + ' está entre 0 y 400 y debe ir de 25 en 25 metros.</span>')
-      return 0
-    } else {
-      return true
-    }
-  } else if (parseInt(rvr_dato) >= 400 && parseInt(rvr_dato) < 800) {
-    if (parseInt(rvr_dato.slice(2, 4)) != 0 && parseInt(rvr_dato.slice(2, 4)) != 50) {
-      salida_texto("<span style='color:red; font-weight:bold'>El RVR en " + rvr_dato + ' está entre 400 y 800 y debe ir de 50 en 50 metros.</span>')
-      return 0
-    } else {
-      return true
-    }
-  } else if (parseInt(rvr_dato) >= 800 && parseInt(rvr_dato) <= 2000) {
-    if (parseInt(rvr_dato.slice(2, 4)) != 0) {
-      salida_texto("<span style='color:red; font-weight:bold'>El RVR en " + rvr_dato + ' está entre 800 y 2000 y debe ir de 100 en 100 metros.</span>')
-      return 0
-    } else {
-      return true
-    }
-  } else if (parseInt(rvr_dato) > 2000) {
-    salida_texto("<span style='color:red; font-weight:bold'>El RVR en " + rvr_dato + ' debe estar entre 50 y 2000.</span>')
-    return 0
-  } else if (parseInt(rvr_dato) < 50) {
-    salida_texto("<span style='color:red; font-weight:bold'>El RVR en " + rvr_dato + ' debe estar entre 50 y 2000.</span>')
-    return 0
-  }
-}
-
-function weather (tiempo_significativo_0, tiempo_significativo_array, visibilidad_dato_previo, n_tiempo_significativo) {	// CONDICIONES OACI DE TIEMPO SIGNIFICATIVO
+function weather(tiempo_significativo_0, tiempo_significativo_array, visibilidad_dato_previo, n_tiempo_significativo) {	// CONDICIONES OACI DE TIEMPO SIGNIFICATIVO
   tiempo_reg_exp_1 = /^(\+|\-|)(DZ|RA|SN|SG|PL|DS|SS|FZDZ|FZRA|FC|SHGR|SHGS|SHRA|SHSN|TSGR|TSGS|TSRA|TSSN|TSGRRA|TSRASN|DZRA|DZSN|DZSG|DZPL|DZGR|DZGS|DZUP|RADZ|RASN|RASG|RAPL|RAGR|RAGS|RAUP|SNDZ|SNRA|SNSG|SNPL|SNGR|SNGS|SNUP|SGDZ|SGRA|SGSN|SGPL|SGGR|SGGS|SGUP|PLDZ|PLRA|PLSN|PLSG|PLGR|PLGS|PLUP)(=)?$/
   tiempo_reg_exp_2 = /^(DZ|RA|SN|SG|PL|DS|SS|FZDZ|FZRA|FC|SHGR|SHGS|SHRA|SHSN|SHVC|TSGR|TSGS|TSRA|TSSN|TSGRRA|TSRASN|DZRA|DZSN|DZSG|DZPL|DZGR|DZGS|DZUP|RADZ|RASN|RASG|RAPL|RAGR|RAGS|RAUP|SNDZ|SNRA|SNSG|SNPL|SNGR|SNGS|SNUP|SGDZ|SGRA|SGSN|SGPL|SGGR|SGGS|SGUP|PLDZ|PLRA|PLSN|PLSG|PLGR|PLGS|PLUP|FG|BR|SA|DU|HZ|FU|VA|SQ|PO|TS|BCFG|BLDU|BLSA|BLSN|DRDU|DRSA|DRSN|FZFG|MIFG|PRFG|VCFG|VCPO|VCFC|VCDS|VCSS|VCTS|VCSH|VCVA|VCBLSN|VCBLSA|VCBLDU)(=)?$/
 
@@ -167,7 +60,7 @@ function weather (tiempo_significativo_0, tiempo_significativo_array, visibilida
   }
 }
 
-function precip (precipitacion_termino) {		// IDENTIFICA TIEMPO SIGNIFICATIVO DE PRECIPITACIONES
+function precip(precipitacion_termino) {		// IDENTIFICA TIEMPO SIGNIFICATIVO DE PRECIPITACIONES
   precipitacion_reg_exp_1 = /^(\+|\-|)(DZ|RA|SN|SG|PL|FZDZ|FZRA|SHGR|SHGS|SHRA|SHSN|TSGR|TSGS|TSRA|TSSN|TSGRRA|TSRASN|DZRA|DZSN|DZSG|DZPL|DZGR|DZGS|DZUP|RADZ|RASN|RASG|RAPL|RAGR|RAGS|RAUP|SNDZ|SNRA|SNSG|SNPL|SNGR|SNGS|SNUP|SGDZ|SGRA|SGSN|SGPL|SGGR|SGGS|SGUP|PLDZ|PLRA|PLSN|PLSG|PLGR|PLGS|PLUP)$/
   precipitacion_reg_exp_2 = /^(DZ|RA|SN|SG|PL|FZDZ|FZRA|SHGR|SHGS|SHRA|SHSN|SHVC|TSGR|TSGS|TSRA|TSSN|TSGRRA|TSRASN|DZRA|DZSN|DZSG|DZPL|DZGR|DZGS|DZUP|RADZ|RASN|RASG|RAPL|RAGR|RAGS|RAUP|SNDZ|SNRA|SNSG|SNPL|SNGR|SNGS|SNUP|SGDZ|SGRA|SGSN|SGPL|SGGR|SGGS|SGUP|PLDZ|PLRA|PLSN|PLSG|PLGR|PLGS|PLUP|)$/
 
@@ -178,7 +71,7 @@ function precip (precipitacion_termino) {		// IDENTIFICA TIEMPO SIGNIFICATIVO DE
   }
 }
 
-function cloud (nube_termino_0, nube_termino_array, nube_n, nube_conv_n) {	// NUBES Y CONDICIONES OACI
+function cloud(nube_termino_0, nube_termino_array, nube_n, nube_conv_n) {	// NUBES Y CONDICIONES OACI
   nube_reg_exp = /^(FEW|SCT|BKN|OVC)(\d{3})(CB|TCU)?(=)?$/
 
   if (nube_termino_0.charAt(nube_termino_0.length - 1) == '=') {
@@ -335,7 +228,7 @@ function cloud (nube_termino_0, nube_termino_array, nube_n, nube_conv_n) {	// NU
   }
 }
 
-function altura_nub (altura_nube_dato) {				// ALTURA DE NUBES Y SUS CONDICIONES DE PRECISIÓN
+function altura_nub(altura_nube_dato) {				// ALTURA DE NUBES Y SUS CONDICIONES DE PRECISIÓN
   if (parseInt(altura_nube_dato.slice(3, 6)) > 100) {
     salida_texto("<span style='color:red; font-weight:bold'>La altura de las nubes en el término " + altura_nube_dato + ' no puede ser mayor de 100</span>')
     return 0
@@ -344,7 +237,7 @@ function altura_nub (altura_nube_dato) {				// ALTURA DE NUBES Y SUS CONDICIONES
   }
 }
 
-function vertical (vis_vertical_dato) {				// VISIBILIDAD VERTICAL
+function vertical(vis_vertical_dato) {				// VISIBILIDAD VERTICAL
   vis_vertical_reg_exp = /^(VV)(\d{3})$/
 
   if (vis_vertical_dato.charAt(vis_vertical_dato.length - 1) == '=') {
@@ -366,7 +259,7 @@ function vertical (vis_vertical_dato) {				// VISIBILIDAD VERTICAL
   }
 }
 
-function temperature (temperatura_dato) {		// CONDICIONES OACI DE TEMPERATURA AMBIENTE Y DE ROCÍO
+function temperature(temperatura_dato) {		// CONDICIONES OACI DE TEMPERATURA AMBIENTE Y DE ROCÍO
   temperatura_reg_exp = /^(\w{2}|\w{3})\/(\w{2}|\w{3})(=)?$/	// DECLARAMOS UNA VARIABLE TIPO PARA COMPARAR
   temperatura_reg_exp_2 = /^(\/)(\/)(\/)(\/)(\/)(=)?$/
 
@@ -418,7 +311,7 @@ function temperature (temperatura_dato) {		// CONDICIONES OACI DE TEMPERATURA AM
   }
 }
 
-function presion (qnh_dato) {				// CONDICIONES OACI DEL QNH
+function presion(qnh_dato) {				// CONDICIONES OACI DEL QNH
   qnh_reg_exp = /^(Q)(\d{4})(=)?$/
   qnh_reg_exp_2 = /^(Q)(\/)(\/)(\/)(\/)(=)?$/
 
@@ -455,7 +348,7 @@ function presion (qnh_dato) {				// CONDICIONES OACI DEL QNH
   }
 }
 
-function meteoreciente (re_fenomeno, re_fenomeno_previo, re_fenomeno_n) {	// FENÓMENOS METEOROLÓGICOS RECIENTES
+function meteoreciente(re_fenomeno, re_fenomeno_previo, re_fenomeno_n) {	// FENÓMENOS METEOROLÓGICOS RECIENTES
   re_fenomeno_reg_exp = /^(RE)(FZDZ|FZRA|BLSN|SS|DS|FC|RA|SN|SG|SHRA|SHSN|SHGR|SHGS|PL|VA|TSRA|TSSN|TSGR|TSGS|TS|DZ|RASN|UP|FZUP|TSUP|SHUP)(=)?$/
   re_fenomeno_longitud = re_fenomeno.length
 
@@ -492,7 +385,7 @@ function meteoreciente (re_fenomeno, re_fenomeno_previo, re_fenomeno_n) {	// FEN
   }
 }
 
-function cizalla1 (cizalladura_1) {		// PRIMER TÉRMINO DE CIZALLADURA
+function cizalla1(cizalladura_1) {		// PRIMER TÉRMINO DE CIZALLADURA
   cizalladura_1_reg_exp = /^(WS)(=)?$/
   cizalladura1_end = 0
 
@@ -512,7 +405,7 @@ function cizalla1 (cizalladura_1) {		// PRIMER TÉRMINO DE CIZALLADURA
   }
 }
 
-function cizalla2 (cizalladura_2, cizalladura_2_n) {		// SEGUNDO TÉRMINO DE CIZALLADURA
+function cizalla2(cizalladura_2, cizalladura_2_n) {		// SEGUNDO TÉRMINO DE CIZALLADURA
   cizalladura_2_1_reg_exp = /^(ALL)(=)?$/
   cizalladura_2_2_reg_exp = /^(R)(\d{2})(R|L|C)?(=)?$/
 
@@ -541,7 +434,7 @@ function cizalla2 (cizalladura_2, cizalladura_2_n) {		// SEGUNDO TÉRMINO DE CIZ
   }
 }
 
-function cizalla3 (cizalladura_3) {		// TERCER TÉRMINO DE CIZALLADURA
+function cizalla3(cizalladura_3) {		// TERCER TÉRMINO DE CIZALLADURA
   cizalladura_3_reg_exp = /^(RWY)(=)?$/
 
   if (cizalladura_3_reg_exp.test(cizalladura_3) == true) {
@@ -557,7 +450,7 @@ function cizalla3 (cizalladura_3) {		// TERCER TÉRMINO DE CIZALLADURA
   }
 }
 
-function estadopista (estado_pista_dato) {		// DIVISIÓN DEL TÉRMINO DE ESTADO DE LA PISTA
+function estadopista(estado_pista_dato) {		// DIVISIÓN DEL TÉRMINO DE ESTADO DE LA PISTA
   estado_pista_reg_exp_1 = /^(R)(\d{2})(R|L|C)?(\/)(\d{1}|\/)(\d{1}|\/)(\d{2}|\/\/)(\d{2}|\/\/)(=)?$/
   estado_pista_reg_exp_2 = /^(R)(\d{2})(R|L|C)?(\/)(CLRD)(\/\/)(=)?$/
   estado_pista_reg_exp_3 = /^(R)(\/)(SNOCLO)(=)?$/
@@ -614,7 +507,7 @@ function estadopista (estado_pista_dato) {		// DIVISIÓN DEL TÉRMINO DE ESTADO 
   }
 }
 
-function rwy (estado_pista_numero_pista, estado_pista_completo) {		// CONDICIONES NÚMERO DE PISTA
+function rwy(estado_pista_numero_pista, estado_pista_completo) {		// CONDICIONES NÚMERO DE PISTA
   if (parseInt(estado_pista_numero_pista) == 0) {
     salida_texto("<span style='color:red; font-weight:bold'>Las pistas en el término " + estado_pista_completo + ' deben estar entre 01 y 36 o incluir los códigos 88 o 99.</span>')
     return 0
@@ -626,7 +519,7 @@ function rwy (estado_pista_numero_pista, estado_pista_completo) {		// CONDICIONE
   }
 }
 
-function contaminacion (estado_pista_contaminacion, estado_pista_completo_2) {	// CONDICIONES DE CONTAMINACIÓN
+function contaminacion(estado_pista_contaminacion, estado_pista_completo_2) {	// CONDICIONES DE CONTAMINACIÓN
   if (isNaN(estado_pista_contaminacion) == true) {
     return true
   } else {
@@ -639,7 +532,7 @@ function contaminacion (estado_pista_contaminacion, estado_pista_completo_2) {	/
   }
 }
 
-function espesor (estado_pista_espesor, estado_pista_completo_3) {		// CONDICIONES DE ESPESOR DE CAPA CONTAMINANTE
+function espesor(estado_pista_espesor, estado_pista_completo_3) {		// CONDICIONES DE ESPESOR DE CAPA CONTAMINANTE
   if (isNaN(estado_pista_espesor) == true) {
     return true
   } else {
@@ -652,7 +545,7 @@ function espesor (estado_pista_espesor, estado_pista_completo_3) {		// CONDICION
   }
 }
 
-function friccion (estado_pista_friccion, estado_pista_completo_4) {		// CONDICIONES DE LA FRICCIÓN DE LA PISTA
+function friccion(estado_pista_friccion, estado_pista_completo_4) {		// CONDICIONES DE LA FRICCIÓN DE LA PISTA
   if (isNaN(estado_pista_friccion) == true) {
     return true
   } else {
@@ -665,7 +558,7 @@ function friccion (estado_pista_friccion, estado_pista_completo_4) {		// CONDICI
   }
 }
 
-function temporal (indicador_temporal_tipo) {		// TIPO DE TREND
+function temporal(indicador_temporal_tipo) {		// TIPO DE TREND
   indicador_temporal_1_reg_exp = /^(NOSIG)(=)?$/
   indicador_temporal_2_reg_exp = /^(BECMG)(=)?$/
   indicador_temporal_3_reg_exp = /^(TEMPO)(=)?$/
@@ -702,7 +595,7 @@ function temporal (indicador_temporal_tipo) {		// TIPO DE TREND
   }
 }
 
-function trend_wind (trend_wind_dato, trend_wind_previo) {		// SEPARADOR DEL VIENTO DE TENDENCIA
+function trend_wind(trend_wind_dato, trend_wind_previo) {		// SEPARADOR DEL VIENTO DE TENDENCIA
   trend_wind_reg_exp_1 = /^(VRB|(\d{3}))(P)?(\d{2})(KT)(=)?$/
   trend_wind_reg_exp_2 = /^(VRB|(\d{3}))(P)?(\d{2})(G)(P)?(\d{2})(KT)(=)?$/
   trend_wind_end = 0
@@ -887,7 +780,7 @@ function trend_wind (trend_wind_dato, trend_wind_previo) {		// SEPARADOR DEL VIE
   }
 }
 
-function wind_dir (trend_wind_direccion, trend_wind_completo) {	// DIRECCIÓN DEL VIENTO DE TENDENCIA
+function wind_dir(trend_wind_direccion, trend_wind_completo) {	// DIRECCIÓN DEL VIENTO DE TENDENCIA
   if (trend_wind_direccion == 'VRB') {
     return 'NC'
   }
@@ -909,7 +802,7 @@ function wind_dir (trend_wind_direccion, trend_wind_completo) {	// DIRECCIÓN DE
   }
 }
 
-function wind_vel (trend_wind_speed, trend_wind_caso, trend_wind_completo_2) {	// VELOCIDAD DEL VIENTO DE TENDENCIA
+function wind_vel(trend_wind_speed, trend_wind_caso, trend_wind_completo_2) {	// VELOCIDAD DEL VIENTO DE TENDENCIA
   trend_wind_speed_numero = parseInt(trend_wind_speed)
 
   if (trend_wind_caso == 'C') {
@@ -929,7 +822,7 @@ function wind_vel (trend_wind_speed, trend_wind_caso, trend_wind_completo_2) {	/
   }
 }
 
-function change_wind (trend_wind_dato_1, trend_wind_dato_previo) {		// CONDICIONES PARA VIENTO DE TENDENCIA
+function change_wind(trend_wind_dato_1, trend_wind_dato_previo) {		// CONDICIONES PARA VIENTO DE TENDENCIA
   trend_wind_reg_1 = /^(\d{3})(P)?(\d{2})(KT)$/
   trend_wind_reg_2 = /^(VRB)(P)?(\d{2})(KT)$/
   trend_wind_reg_3 = /^(\d{3})(P)?(\d{2})(G)(P)?(\d{2})(KT)$/
@@ -1034,7 +927,7 @@ function change_wind (trend_wind_dato_1, trend_wind_dato_previo) {		// CONDICION
   }
 }
 
-function trend_visibility (trend_visibility_dato, trend_visibility_visibilidad_media) { // CONDICIONES PARA VISIBILIDAD DE TENDENCIA
+function trend_visibility(trend_visibility_dato, trend_visibility_visibilidad_media) { // CONDICIONES PARA VISIBILIDAD DE TENDENCIA
   trend_visibility_reg_exp = /^(\d{4})(=)?$/
 
   if (trend_visibility_reg_exp.test(trend_visibility_dato) == true) {
@@ -1174,7 +1067,7 @@ function trend_visibility (trend_visibility_dato, trend_visibility_visibilidad_m
   }
 }
 
-function trend_weather (trend_weather_dato, trend_weather_previo_dato, trend_weather_n1, trend_weather_n2) {	// CONDICIONES PARA TIEMPO SIGNIFICATIVO EN TENDENCIA
+function trend_weather(trend_weather_dato, trend_weather_previo_dato, trend_weather_n1, trend_weather_n2) {	// CONDICIONES PARA TIEMPO SIGNIFICATIVO EN TENDENCIA
   tor = /^(\+|\-)?(TSGR|TSGS|TSRA|TSSN)(=)?$/
   prec = /^(\+|\-)?(SHGS|SHGR|SHRA|SHSN|DZ|RA|SN|SG|PL|GR|GS|RASN|RADZ)(=)?$/
   eng = /^(\+|\-)?(FZDZ|FZRA)(=)?$/
@@ -1354,7 +1247,7 @@ function trend_weather (trend_weather_dato, trend_weather_previo_dato, trend_wea
   return false
 }
 
-function trend_clouds (trend_clouds_dato, trend_clouds_previo) {		// CONDICIONES PARA NUBES DE TENDENCIA
+function trend_clouds(trend_clouds_dato, trend_clouds_previo) {		// CONDICIONES PARA NUBES DE TENDENCIA
   nube = /^(FEW|SCT|BKN|OVC)(\d{3})(CB|TCU)?(=)?$/
 
   if (nube.test(trend_clouds_dato) == true) {
@@ -1512,7 +1405,7 @@ function trend_clouds (trend_clouds_dato, trend_clouds_previo) {		// CONDICIONES
   }
 }
 
-function trend_vertical (trend_vertical_dato, trend_vertical_visibilidad_dato, trend_vertical_n) {	// CONDICIONES PARA VISIBILIDAD VERTICAL EN TENDENCIA
+function trend_vertical(trend_vertical_dato, trend_vertical_visibilidad_dato, trend_vertical_n) {	// CONDICIONES PARA VISIBILIDAD VERTICAL EN TENDENCIA
   trend_vertical_reg_exp = /^(VV)(\d{3})(=)?$/
 
   if (trend_vertical_reg_exp.test(trend_vertical_dato) == true) {
@@ -1620,7 +1513,7 @@ function trend_vertical (trend_vertical_dato, trend_vertical_visibilidad_dato, t
   }
 }
 
-function rmk_wind_separador (rmk_wind_code, rmk_termino) {		// SEPARADOR TÉRMINO DE VIENTO RMK
+function rmk_wind_separador(rmk_wind_code, rmk_termino) {		// SEPARADOR TÉRMINO DE VIENTO RMK
   rmk_wind_1 = /^(R09)\//
   rmk_wind_2 = /^(ARP)\//
 
@@ -1645,7 +1538,7 @@ function rmk_wind_separador (rmk_wind_code, rmk_termino) {		// SEPARADOR TÉRMIN
   }
 }
 
-function rmk_wind (termino_viento_rmk, tipo_rmk, rmk_wind_completo) {		// CONDICIONES DE VIENTO EN RMK
+function rmk_wind(termino_viento_rmk, tipo_rmk, rmk_wind_completo) {		// CONDICIONES DE VIENTO EN RMK
   wind_reg_exp = /^(\D{3}|\d{3})(P)?(\d{2})(G)?(P)?(\d{2})?(\D{2})(=)?$/
   let rmk_largo = termino_viento_rmk.length	// Los de longitud 7 y 8 no llevan rachas y los de longitud 10 y 11 llevan rachas
   let direccion
@@ -1810,7 +1703,7 @@ function rmk_wind (termino_viento_rmk, tipo_rmk, rmk_wind_completo) {		// CONDIC
   }
 }
 
-function rmk_wind_var (rmk_viento_variable, rmk_viento_previo) {			// CONDICIONES DE VIENTO VARIABLE EN RMK
+function rmk_wind_var(rmk_viento_variable, rmk_viento_previo) {			// CONDICIONES DE VIENTO VARIABLE EN RMK
   rmk_viento_variable_reg_exp = /^(\d{3})(V)(\d{3})(=)?$/	// VARIABLE TIPO PARA COMPARAR
 
   if (rmk_viento_variable_reg_exp.test(rmk_viento_variable) == true) {
