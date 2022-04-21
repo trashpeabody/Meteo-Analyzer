@@ -29,9 +29,15 @@ interface ItemResult {
     result: Result
 }
 
-interface OptionalCheck {
+export interface Check {
+    isCorrect: boolean,
+    info?: any
+}
+
+export interface OptionalCheck {
     matches: boolean,
-    correct: boolean
+    isCorrect: boolean,
+    info?: any
 }
 
 export class FinalResult {
@@ -43,21 +49,34 @@ export class FinalResult {
         }
         this.items.push(newItem)
     }
-    private get lastItem() {
-        return this.items[this.items.length - 1]
-    }
-    private isLastCorrect(): boolean {
-        return this.lastItem.result.isCorrect
-    }
-    checkCompulsory(term: string, check: CheckCompulsory, info?: any): boolean {
-        this.addItem(term, check(term, info))
-        return this.isLastCorrect()
+    checkCompulsory(term: string, check: CheckCompulsory, info?: any): Check {
+        const result: Result = check(term, info)
+        this.addItem(term, result)
+        return (
+            typeof (result.info === 'undefined')
+                ? {
+                    isCorrect: result.isCorrect
+                }
+                : {
+                    isCorrect: result.isCorrect,
+                    info: result.info
+                }
+        )
     }
     checkOptional(term: string, check: CheckOptional, info?: any): OptionalCheck {
         const result: OptionalResult = check(term, info)
         if (result.matches) this.addItem(term, result.result)
-        return {
-            matches: result.matches, correct: result.result.isCorrect
-        }
+        return (
+            typeof (result.info === 'undefined')
+                ? {
+                    matches: result.matches,
+                    isCorrect: result.result.isCorrect
+                }
+                : {
+                    matches: result.matches,
+                    isCorrect: result.result.isCorrect,
+                    info: result.info
+                }
+        )
     }
 }

@@ -2,13 +2,16 @@ import { checkAirport } from './modules/airport'
 import { checkDate } from './modules/date'
 import { checkKind } from './modules/kind'
 import { checkWind } from './modules/averageWind.js'
-import { MessageProcessed, FinalResult } from './modules/types'
+import { MessageProcessed, FinalResult, Check, OptionalCheck } from './modules/types'
 import { getArray } from './modules/format'
+import { checkWindVar } from './modules/variableWind'
 
 export const analyse = (kind: 'METAR' | 'SPECI' = 'METAR'): FinalResult => {
   const message = 'METAR LEMD 210900Z 34003KT 310V020 CAVOK M01/M03 Q1026 NOSIG='
   let finalResult = new FinalResult
   let index = 0
+  let check: Check
+  let optionalCheck: OptionalCheck
   const messageProcessed: MessageProcessed = getArray(message)
 
   if (messageProcessed.notProcessed.length > 0)
@@ -72,11 +75,16 @@ export const analyse = (kind: 'METAR' | 'SPECI' = 'METAR'): FinalResult => {
     }
   }
 
-  if (!finalResult.checkCompulsory(messageArray[index], checkWind))
+  check = finalResult.checkCompulsory(messageArray[index], checkWind)
+  if (!check.isCorrect)
     return finalResult
   index++
 
-
+  optionalCheck = finalResult.checkOptional(messageArray[index], checkWindVar, check.info)
+  if (optionalCheck.matches) {
+    if (!optionalCheck.isCorrect) return finalResult
+    index++
+  }
 
   return finalResult
 
