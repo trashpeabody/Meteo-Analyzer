@@ -5,7 +5,7 @@ describe('Test checkDate module', () => {
   test('Empty', () => {
     const result = checkDate('')
     const expected = {
-      result: 'Date does not follow the expected format (DDHHMMZ)',
+      reason: 'Date does not follow the expected format (DDHHMMZ).',
       isCorrect: false
     }
     expect(result).toStrictEqual(expected)
@@ -14,7 +14,7 @@ describe('Test checkDate module', () => {
   test('Incorrect format', () => {
     const result = checkDate('210526')
     const expected = {
-      result: 'Date does not follow the expected format (DDHHMMZ)',
+      reason: 'Date does not follow the expected format (DDHHMMZ).',
       isCorrect: false
     }
     expect(result).toStrictEqual(expected)
@@ -23,7 +23,7 @@ describe('Test checkDate module', () => {
   test('Day incorrect', () => {
     const result = checkDate('320000Z')
     const expected = {
-      result: 'Day must be between 1 and 31',
+      reason: 'Day must be between 1 and 31.',
       isCorrect: false
     }
     expect(result).toStrictEqual(expected)
@@ -34,7 +34,7 @@ describe('Test checkDate module', () => {
   test('Hour incorrect', () => {
     const result = checkDate('242400Z')
     const expected = {
-      result: 'Hour must be between 0 and 23',
+      reason: 'Hour must be between 0 and 23.',
       isCorrect: false
     }
     expect(result).toStrictEqual(expected)
@@ -43,7 +43,7 @@ describe('Test checkDate module', () => {
   test('Minute incorrect', () => {
     const result = checkDate('241505Z')
     const expected = {
-      result: 'Min must be 0 or 30',
+      reason: 'Min must be 0 or 30.',
       isCorrect: false
     }
     expect(result).toStrictEqual(expected)
@@ -52,7 +52,7 @@ describe('Test checkDate module', () => {
   test('Correct', () => {
     const result = checkDate('241500Z')
     const expected = {
-      result: 'Month day and Zulu time of the message.',
+      reason: 'Month day and Zulu time of the message.',
       isCorrect: true
     }
     expect(result).toStrictEqual(expected)

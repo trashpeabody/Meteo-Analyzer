@@ -6,7 +6,7 @@ describe('Test checkKind module', () => {
     const result = checkKind('', 'METAR')
     const expected = {
       isCorrect: false,
-      result: 'Message must start with the keyword METAR'
+      reason: 'Message must start with the keyword METAR.'
     }
     expect(result).toStrictEqual(expected)
   })
@@ -15,7 +15,7 @@ describe('Test checkKind module', () => {
     const result = checkKind('METAR', 'METAR')
     const expected = {
       isCorrect: true,
-      result: 'Key identifier of the message kind '
+      reason: 'Key identifier of the message kind.'
     }
     expect(result).toStrictEqual(expected)
   })
@@ -24,7 +24,7 @@ describe('Test checkKind module', () => {
     const result = checkKind('test', 'SPECI')
     const expected = {
       isCorrect: false,
-      result: 'Message must start with the keyword SPECI'
+      reason: 'Message must start with the keyword SPECI.'
     }
     expect(result).toStrictEqual(expected)
   })
@@ -33,7 +33,7 @@ describe('Test checkKind module', () => {
     const result = checkKind('SPECI', 'SPECI')
     const expected = {
       isCorrect: true,
-      result: 'Key identifier of the message kind '
+      reason: 'Key identifier of the message kind.'
     }
     expect(result).toStrictEqual(expected)
   })

@@ -1,16 +1,16 @@
-import { Result } from './interfaces'
+import { CheckCompulsory, Result } from './types'
 
-export const checkAirport = (airport: string): Result => {
-  const airportRegExp = /^[A-Z]{4}$/
+export const checkAirport: CheckCompulsory = (airport: string): Result => {
   return (
-    airportRegExp.test(airport)
+    /^[A-Z]{4}$/.test(airport)
       ? {
         isCorrect: true,
-        result: 'Airport ICAO code'
+        reason: 'Airport ICAO code.'
       }
       : {
         isCorrect: false,
-        result: 'Airport code does not follow ICAO format (ZZZZ)'
+        reason: 'Airport code does not follow ICAO format (ZZZZ).'
       }
   )
+
 }

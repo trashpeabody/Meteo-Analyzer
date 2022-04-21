@@ -1,15 +1,15 @@
-import { Result } from './interfaces'
+import { CheckCompulsory, Result } from './types'
 
-export const checkKind = (element: String, kind: 'METAR' | 'SPECI'): Result => {
-  if (element !== kind) {
-    return {
-      isCorrect: false,
-      result: 'Message must start with the keyword ' + kind
-    }
-  } else {
-    return {
-      isCorrect: true,
-      result: 'Key identifier of the message kind '
-    }
-  }
+export const checkKind: CheckCompulsory = (element: String, kind: 'METAR' | 'SPECI'): Result => {
+  return (
+    element !== kind
+      ? {
+        isCorrect: false,
+        reason: `Message must start with the keyword ${kind}.`
+      }
+      : {
+        isCorrect: true,
+        reason: 'Key identifier of the message kind.'
+      }
+  )
 }
