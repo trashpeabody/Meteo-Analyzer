@@ -77,7 +77,7 @@ const checkDifference = (direction1: string, direction2: string): Result => {
 }
 
 export const checkWindVar: CheckOptional = (windVar: string, info: WindVarInfo): OptionalResult => {
-  const varWindRegExp = /^(\d{3})(V)(\d{3})(=)?$/
+  const varWindRegExp = /^(\d{3})(V)(\d{3})$/
   let result: Result
 
   if (!varWindRegExp.test(windVar))

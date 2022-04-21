@@ -5,6 +5,7 @@ import { checkWind } from './modules/averageWind.js'
 import { MessageProcessed, FinalResult, Check, OptionalCheck } from './modules/types'
 import { getArray } from './modules/format'
 import { checkWindVar } from './modules/variableWind'
+import { checkVisibility } from './modules/averageVisibility'
 
 export const analyse = (kind: 'METAR' | 'SPECI' = 'METAR'): FinalResult => {
   const message = 'METAR LEMD 210900Z 34003KT 310V020 CAVOK M01/M03 Q1026 NOSIG='
@@ -84,6 +85,20 @@ export const analyse = (kind: 'METAR' | 'SPECI' = 'METAR'): FinalResult => {
   if (optionalCheck.matches) {
     if (!optionalCheck.isCorrect) return finalResult
     index++
+  }
+
+  if (messageArray[index] === 'CAVOK') {
+    finalResult.addItem(messageArray[index],
+      {
+        isCorrect: true,
+        reason: 'No Visibility, RVR, Present weather, clouds nor vertical visibility can be included in the message.'
+      })
+    index++
+  } else {
+    if (!finalResult.checkCompulsory(messageArray[index], checkVisibility, messageArray[index - 1]))
+      return finalResult
+    index++
+
   }
 
   return finalResult

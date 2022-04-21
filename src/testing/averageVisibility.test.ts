@@ -1,6 +1,6 @@
 import { checkVisibility } from '../modules/averageVisibility'
 
-describe('Test average wind module', () => {
+describe('Test average visibility module', () => {
 
   describe('Testing incorrect inputs', () => {
 

@@ -6,7 +6,7 @@ export interface WindData {
 }
 
 export const checkWind: CheckCompulsory = (wind: string): Result => {
-  const windRegExp: RegExp = /^(\d{3}|VRB)(P)?(\d{2})(G)?(P)?(\d{2})?(KT)(=)?$/
+  const windRegExp: RegExp = /^(\d{3}|VRB)(P)?(\d{2})(G)?(P)?(\d{2})?(KT)$/
   let calm: boolean = false
 
   const checkDirection = (direction: string, wind: string): Result => {
